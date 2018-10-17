@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E6E2D227-56AC-4792-A9B6-F61D29040B0A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TuesPechkin</RootNamespace>
+    <AssemblyName>TuesPechkin</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="EventHandlers\BeginEventHandler.cs" />
+    <Compile Include="EventHandlers\ErrorEventHandler.cs" />
+    <Compile Include="EventHandlers\FinishEventHandler.cs" />
+    <Compile Include="EventHandlers\PhaseChangedEventHandler.cs" />
+    <Compile Include="EventHandlers\ProgressChangedEventHandler.cs" />
+    <Compile Include="EventHandlers\WarningEventHandler.cs" />
+    <Compile Include="Factory.cs" />
+    <Compile Include="FooterSettings.cs" />
+    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="HeaderSettings.cs" />
+    <Compile Include="HtmlToPdfDocument.cs" />
+    <Compile Include="IPechkin.cs" />
+    <Compile Include="LoadSettings.cs" />
+    <Compile Include="MarginSettings.cs" />
+    <Compile Include="ObjectSettings.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="PechkinBindings.cs" />
+    <Compile Include="PechkinPaperSize.cs" />
+    <Compile Include="PechkinStatic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs" />
+    <Compile Include="Proxy.cs" />
+    <Compile Include="SettingApplicator.cs" />
+    <Compile Include="SimplePechkin.cs" />
+    <Compile Include="SynchronizedDispatcher.cs" />
+    <Compile Include="TableOfContentsSettings.cs" />
+    <Compile Include="Tracer.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="Util\IntCallback.cs" />
+    <Compile Include="Util\RetroDelegates.cs" />
+    <Compile Include="Util\StringCallback.cs" />
+    <Compile Include="Util\UTF8Marshaller.cs" />
+    <Compile Include="Util\VoidCallback.cs" />
+    <Compile Include="WebSettings.cs" />
+    <Compile Include="WinApiHelper.cs" />
+    <Compile Include="WkhtmltopdfSettingAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\STPechkin.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\STPechkin.csprojAssemblyReference.cache" />
+    <None Include="obj\Debug\TuesPechkin.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\TuesPechkin.csproj.GenerateResource.cache" />
+    <None Include="obj\Debug\TuesPechkin.csprojAssemblyReference.cache" />
+    <None Include="Reference\source\image\image.pro" />
+    <None Include="Reference\source\lib\lib.pri" />
+    <None Include="Reference\source\lib\lib.pro" />
+    <None Include="Reference\source\pdf\pdf.pro" />
+    <None Include="Reference\source\shared\shared.pri" />
+    <None Include="tools\net40\install.ps1" />
+    <None Include="wkhtmltox_32.dll.gz" />
+    <None Include="wkhtmltox_64.dll.gz" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\STPechkin.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\STPechkin.dll" />
+    <Content Include="obj\Debug\STPechkin.pdb" />
+    <Content Include="obj\Debug\TuesPechkin.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\TuesPechkin.dll" />
+    <Content Include="obj\Debug\TuesPechkin.pdb" />
+    <Content Include="Reference\include\converter.hh" />
+    <Content Include="Reference\include\dllbegin.inc" />
+    <Content Include="Reference\include\dllend.inc" />
+    <Content Include="Reference\include\image.h" />
+    <Content Include="Reference\include\imageconverter.hh" />
+    <Content Include="Reference\include\imagesettings.hh" />
+    <Content Include="Reference\include\loadsettings.hh" />
+    <Content Include="Reference\include\multipageloader.hh" />
+    <Content Include="Reference\include\pdf.h" />
+    <Content Include="Reference\include\pdfconverter.hh" />
+    <Content Include="Reference\include\pdfsettings.hh" />
+    <Content Include="Reference\include\settings.hh" />
+    <Content Include="Reference\include\utilities.hh" />
+    <Content Include="Reference\include\websettings.hh" />
+    <Content Include="Reference\pattern.txt" />
+    <Content Include="Reference\pdf_c_api.c" />
+    <Content Include="Reference\source\image\imagearguments.cc" />
+    <Content Include="Reference\source\image\imagecommandlineparser.cc" />
+    <Content Include="Reference\source\image\imagecommandlineparser.hh" />
+    <Content Include="Reference\source\image\imagedocparts.cc" />
+    <Content Include="Reference\source\image\wkhtmltoimage.cc" />
+    <Content Include="Reference\source\lib\converter.cc" />
+    <Content Include="Reference\source\lib\converter.hh" />
+    <Content Include="Reference\source\lib\converter_p.hh" />
+    <Content Include="Reference\source\lib\dllbegin.inc" />
+    <Content Include="Reference\source\lib\dllend.inc" />
+    <Content Include="Reference\source\lib\doc.cc" />
+    <Content Include="Reference\source\lib\image.h" />
+    <Content Include="Reference\source\lib\imageconverter.cc" />
+    <Content Include="Reference\source\lib\imageconverter.hh" />
+    <Content Include="Reference\source\lib\imageconverter_p.hh" />
+    <Content Include="Reference\source\lib\imagesettings.cc" />
+    <Content Include="Reference\source\lib\imagesettings.hh" />
+    <Content Include="Reference\source\lib\image_c_bindings.cc" />
+    <Content Include="Reference\source\lib\image_c_bindings_p.hh" />
+    <Content Include="Reference\source\lib\lib.def" />
+    <Content Include="Reference\source\lib\loadsettings.cc" />
+    <Content Include="Reference\source\lib\loadsettings.hh" />
+    <Content Include="Reference\source\lib\multipageloader.cc" />
+    <Content Include="Reference\source\lib\multipageloader.hh" />
+    <Content Include="Reference\source\lib\multipageloader_p.hh" />
+    <Content Include="Reference\source\lib\outline.cc" />
+    <Content Include="Reference\source\lib\outline.hh" />
+    <Content Include="Reference\source\lib\outline_p.hh" />
+    <Content Include="Reference\source\lib\pdf.h" />
+    <Content Include="Reference\source\lib\pdfconverter.cc" />
+    <Content Include="Reference\source\lib\pdfconverter.hh" />
+    <Content Include="Reference\source\lib\pdfconverter_p.hh" />
+    <Content Include="Reference\source\lib\pdfsettings.cc" />
+    <Content Include="Reference\source\lib\pdfsettings.hh" />
+    <Content Include="Reference\source\lib\pdf_c_bindings.cc" />
+    <Content Include="Reference\source\lib\pdf_c_bindings_p.hh" />
+    <Content Include="Reference\source\lib\reflect.cc" />
+    <Content Include="Reference\source\lib\reflect.hh" />
+    <Content Include="Reference\source\lib\tempfile.cc" />
+    <Content Include="Reference\source\lib\tempfile.hh" />
+    <Content Include="Reference\source\lib\tocstylesheet.cc" />
+    <Content Include="Reference\source\lib\utilities.cc" />
+    <Content Include="Reference\source\lib\utilities.hh" />
+    <Content Include="Reference\source\lib\websettings.cc" />
+    <Content Include="Reference\source\lib\websettings.hh" />
+    <Content Include="Reference\source\pdf\pdfarguments.cc" />
+    <Content Include="Reference\source\pdf\pdfcommandlineparser.cc" />
+    <Content Include="Reference\source\pdf\pdfcommandlineparser.hh" />
+    <Content Include="Reference\source\pdf\pdfdocparts.cc" />
+    <Content Include="Reference\source\pdf\wkhtmltopdf.cc" />
+    <Content Include="Reference\source\shared\arghandler.cc" />
+    <Content Include="Reference\source\shared\arghandler.inl" />
+    <Content Include="Reference\source\shared\commandlineparserbase.cc" />
+    <Content Include="Reference\source\shared\commandlineparserbase.hh" />
+    <Content Include="Reference\source\shared\commonarguments.cc" />
+    <Content Include="Reference\source\shared\commondocparts.cc" />
+    <Content Include="Reference\source\shared\htmloutputter.cc" />
+    <Content Include="Reference\source\shared\manoutputter.cc" />
+    <Content Include="Reference\source\shared\outputter.cc" />
+    <Content Include="Reference\source\shared\outputter.hh" />
+    <Content Include="Reference\source\shared\progressfeedback.cc" />
+    <Content Include="Reference\source\shared\progressfeedback.hh" />
+    <Content Include="Reference\source\shared\textoutputter.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="obj\Debug\TuesPechkin.Properties.Resources.resources" />
+    <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
