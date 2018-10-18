@@ -29,12 +29,9 @@ namespace STRenderWebService
             byte[] bytesB = Encoding.UTF8.GetBytes("<html>hello body here</html>");
             byte[] bytesF = Encoding.UTF8.GetBytes("<html>hello Footer here</html>");
             byte[] bytesPdf = stht.HtmlToPdf(bytesH, bytesB, bytesF);
-            
-
             workStream.Write(bytesPdf, 0, bytesPdf.Length);
             workStream.Position = 0;
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            //var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
             result.Content = new StreamContent(workStream);
             result.Content.Headers.ContentType =
                 new MediaTypeHeaderValue("application/pdf");
@@ -42,42 +39,17 @@ namespace STRenderWebService
         }
 
 
-    /*
-        public HttpResponseMessage PostOLD(JObject json)
-        {
-
-            byte[] htmlheader = Convert.FromBase64String(json["htmlHeader"].ToString());
-            byte[] htmlbody = Convert.FromBase64String(json["htmlBody"].ToString());
-            byte[] htmlfooter = Convert.FromBase64String(json["htmlFooter"].ToString());
-            MemoryStream workStream = new MemoryStream();
-            IBasicHtmlToPdfConverter stht = new HTMLtoPDF.STHtmlToPdfNS.STHtmlToPdf();
-            //byte[] bytes = Encoding.ASCII.GetBytes("<html>hello here</html>");
-            byte[] bytesPdf = stht.HtmlToPdf(htmlheader, htmlbody, htmlfooter);
-
-            workStream.Write(bytesPdf, 0, bytesPdf.Length);
-            workStream.Position = 0;
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            //var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            result.Content = new StreamContent(workStream);
-            result.Content.Headers.ContentType =
-                new MediaTypeHeaderValue("application/pdf");
-            return result;
-        }
-        */
+ 
         [System.Web.Http.HttpPostAttribute]
         [HttpOptions]
         public HttpResponseMessage Post(JObject json)
         {
-            // JObject json = JObject.Parse(jsons);
-
-            //MemoryStream workStream = new MemoryStream();
             try
             {
-                IBasicHtmlToPdfConverter stht = new NRecoHtmlToPdf();
-                //byte[] bytes = Encoding.UTF8.GetBytes("<html>hello here</html>");
                 string method = json["Method"].ToString();
                 if (method == "HtmlToPdf")
                 {
+                    IBasicHtmlToPdfConverter stht = new NRecoHtmlToPdf();
                     byte[] htmlheader = Convert.FromBase64String(json["htmlHeader"].ToString());
                     byte[] htmlbody = Convert.FromBase64String(json["htmlBody"].ToString());
                     byte[] htmlfooter = Convert.FromBase64String(json["htmlFooter"].ToString());
@@ -87,6 +59,10 @@ namespace STRenderWebService
                 else if (method == "ImageToPdf")
                 {
                     byte[] imageBytes = Convert.FromBase64String(json["image"].ToString());
+                    if (!STValidateBytes.IsImage(imageBytes))
+                    {
+                        return CreateBadResponce(String.Format("{0}:Input is not valid image", method));
+                    }
                     IBasicHtmlToPdfConverter convertorPdf = new HtmlToPdfi7();
                     byte[] pdf = convertorPdf.ImageToPdf(imageBytes);
                     return CreateResponce(json["Method"].ToString(), pdf);
@@ -97,24 +73,31 @@ namespace STRenderWebService
                     IBasicHtmlToPdfConverter convertorPdf = new HtmlToPdfi7();
                     JArray pdfs = (JArray)json["pdfs"];
                     List<string> pdfsBase64 = JsonConvert.DeserializeObject<List<string>>(pdfs.ToString());
+                    int i = 0;
                     foreach (string pdfbase64 in pdfsBase64)
                     {
 
-                        pdfsBytes.Add(Convert.FromBase64String(pdfbase64));                                  //here more code in order to save in a database
-
+                        byte[] inbytes = Convert.FromBase64String(pdfbase64);
+                        if(!STValidateBytes.IsPdf(inbytes))
+                        {
+                           return CreateBadResponce(String.Format("{0}:Input {1} is not Pdf:", method,i));
+                        }
+                        pdfsBytes.Add(Convert.FromBase64String(pdfbase64));
+                        i++;
                     }
                     byte[] combinedbytes = convertorPdf.CombinePdfs(pdfsBytes);
-
                     return CreateResponce(json["Method"].ToString(), combinedbytes);
                 }
-                else return Request.CreateResponse(HttpStatusCode.BadRequest);
+                else
+                    return CreateBadResponce("Uncknown Method:"+ method);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                return CreateBadResponce(ex.ToString());
             }
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            
         }
+
         public HttpResponseMessage CreateResponce(string resptext, byte[] respbytes,string Metadata="pdf")
         {
             string b64Data = Convert.ToBase64String(respbytes);
@@ -134,34 +117,23 @@ namespace STRenderWebService
             response.Content = new StringContent(ResponceObj.ToString(), Encoding.UTF8, "application/json");
             return response;
         }
-        //    public FileStreamResult pdf()
-        //    {
+        public HttpResponseMessage CreateBadResponce(string resptext)
+        {
 
-        //        MemoryStream workStream = new MemoryStream();
-        //        IBasicHtmlToPdfConverter stht = new STHtmlToPdf();
-        //        byte[] bytes = Encoding.ASCII.GetBytes("<html>hello here</html>");
-        //        byte[] bytesPdf = stht.HtmlToPdf(bytes);
-
-        //        workStream.Write(bytesPdf, 0, bytesPdf.Length);
-        //        workStream.Position = 0;
-        //        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-        //        //var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        //        result.Content = new StreamContent(workStream);
-        //        result.Content.Headers.ContentType =
-        //            new MediaTypeHeaderValue("application/octet-stream");
-        //        return result;
-        //        //return new FileStreamResult(workStream, "application/pdf");
-        //    }
-        //    public HttpResponseMessage Post(string version, string environment,
-        //string filetype)
-        //    {
-        //        var path = @"C:\Temp\test.exe";
-        //        HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-        //        var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-        //        result.Content = new StreamContent(stream);
-        //        result.Content.Headers.ContentType =
-        //            new MediaTypeHeaderValue("application/octet-stream");
-        //        return result;
-        //    }
+            var ResponceObj = new JObject
+            {
+                new JProperty("Data",
+                                new JObject
+                                {
+                                new JProperty("metaData", "error"),
+                                new JProperty("DataBytes", ""),
+                                }
+                          ),
+                new JProperty("Message", resptext)
+            };
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(ResponceObj.ToString(), Encoding.UTF8, "application/json");
+            return response;
+        }
     }
 }

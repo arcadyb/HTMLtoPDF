@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using STHtmlToPdf.STHtmlToPdf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,15 @@ namespace STRenderWebService
         byte[] HtmlToPdf(string htmlheader, string htmlbody, string htmlfooter);
         byte[] ImageToPdf(byte[] image);
         byte[] CombinePdfs(List<byte[]> pdfs);
+        string GetLastError();
     }
     public class STPdfServiceApiProxy : ISTPdfServiceApiProxy
     {
         private string IpHost = "http://192.168.200.151:5002/";
+        private string LastError = "";
+
+        
+
         public void bindTo(string adress)
         {
             //http://localhost:5002/
@@ -32,7 +38,15 @@ namespace STRenderWebService
 
             foreach (byte[] pdf in pdfs)
             {
-                jarrayObj.Add(Convert.ToBase64String(pdf));
+                if (STValidateBytes.IsPdf(pdf))
+                {
+                    jarrayObj.Add(Convert.ToBase64String(pdf));
+                }
+                else
+                {
+                    LastError = "CombinePdfs: bad input file format";
+                    return null;
+                }
             }
             var myObject = (dynamic)new JObject();
             myObject.Method = "CombinePdfs";
@@ -51,17 +65,6 @@ namespace STRenderWebService
 
         public byte[] HtmlToPdf(string htmlheader, string htmlbody, string htmlfooter)
         {
-            //var ResponceObj = new JObject
-            //{
-            //    new JProperty("Data",
-            //                    new JObject
-            //                    {
-            //                    new JProperty("metaData", Metadata),
-            //                    new JProperty("DataBytes", b64Data),
-            //                    }
-            //              ),
-            //    new JProperty("Message", resptext)
-            //};
             var myObject = (dynamic)new JObject();
             myObject.htmlHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes(htmlheader));
             myObject.htmlBody = Convert.ToBase64String(Encoding.UTF8.GetBytes(htmlbody));
@@ -78,24 +81,36 @@ namespace STRenderWebService
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             string sresult = httpClient.PostAsync(baseAddress, content).Result.Content.ReadAsStringAsync().Result;
             JObject objRes = JObject.Parse(sresult);
+            return ProccessResponce(objRes);
+        }
+        //if returns null check GetLastError()
+        public byte[] ImageToPdf(byte[] image)
+        {
+            if(!STValidateBytes.IsImage(image))
+            {
+                LastError="ImageToPdf:bad image input";
+            }
+            var myObject = (dynamic)new JObject();
+            myObject.image = Convert.ToBase64String(image);
+            myObject.Method = "ImageToPdf";
+            byte[] res = PostJObject(myObject);
+            return res;
+        }
+
+        private byte[] ProccessResponce(JObject objRes)
+        {
+            if (objRes["Data"]["metaData"]?.ToString() == "error")
+            {
+                LastError = objRes["Data"]["Message"]?.ToString();
+                return null;
+            }
             byte[] res = Convert.FromBase64String(objRes["Data"]["DataBytes"].ToString());
             return res;
         }
 
-        public byte[] ImageToPdf(byte[] image)
+        public string GetLastError()
         {
-            var myObject = (dynamic)new JObject();
-            myObject.image = Convert.ToBase64String(image);
-            myObject.Method = "ImageToPdf";
-            var baseAddress = string.Format("{0}api/STRender", IpHost);
-            var httpClient = new HttpClient();
-            var content = new StringContent(myObject.ToString(), Encoding.UTF8, "application/json");
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            string sresult = httpClient.PostAsync(baseAddress, content).Result.Content.ReadAsStringAsync().Result;
-            JObject objRes = JObject.Parse(sresult);
-            byte[] res = Convert.FromBase64String(objRes["Data"]["DataBytes"].ToString());
-            return res;
-
+            return LastError;
         }
     }
 }

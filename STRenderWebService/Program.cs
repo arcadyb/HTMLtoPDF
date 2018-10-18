@@ -70,7 +70,7 @@ namespace STRenderWebService
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Cannot bind server:try run as administrator");
             }
         }
      }
