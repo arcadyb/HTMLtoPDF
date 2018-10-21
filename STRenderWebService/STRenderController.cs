@@ -50,9 +50,14 @@ namespace STRenderWebService
                 if (method == "HtmlToPdf")
                 {
                     IBasicHtmlToPdfConverter stht = new NRecoHtmlToPdf();
+                    if(json["htmlBody"]==null ||String.IsNullOrEmpty(json["htmlBody"].ToString()))
+                    {
+                        return CreateBadResponce("Html Body is empty");
+                    }
                     byte[] htmlheader = Convert.FromBase64String(json["htmlHeader"].ToString());
                     byte[] htmlbody = Convert.FromBase64String(json["htmlBody"].ToString());
                     byte[] htmlfooter = Convert.FromBase64String(json["htmlFooter"].ToString());
+                    
                     byte[] bytesPdf = stht.HtmlToPdf(htmlheader, htmlbody, htmlfooter);
                     return CreateResponce(json["Method"].ToString(), bytesPdf);
                 }
@@ -112,8 +117,18 @@ namespace STRenderWebService
                           ),
                 new JProperty("Message", resptext)
             };
+            HttpResponseMessage response = new HttpResponseMessage();
+            if (Request != null)
+            {
+                 response = Request.CreateResponse(HttpStatusCode.OK);
 
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            }
+            else
+            {
+                this.Request = new HttpRequestMessage();
+                this.Request.SetConfiguration(new HttpConfiguration());
+                response = Request.CreateResponse(HttpStatusCode.OK);
+            }
             response.Content = new StringContent(ResponceObj.ToString(), Encoding.UTF8, "application/json");
             return response;
         }
@@ -131,7 +146,19 @@ namespace STRenderWebService
                           ),
                 new JProperty("Message", resptext)
             };
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            HttpResponseMessage response = new HttpResponseMessage();
+            if (Request != null)
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK);
+
+            }
+            else
+            {
+                this.Request = new HttpRequestMessage();
+                this.Request.SetConfiguration(new HttpConfiguration());
+                response = Request.CreateResponse(HttpStatusCode.OK);
+            }
+            
             response.Content = new StringContent(ResponceObj.ToString(), Encoding.UTF8, "application/json");
             return response;
         }

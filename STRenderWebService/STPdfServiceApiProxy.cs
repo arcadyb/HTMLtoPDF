@@ -71,6 +71,7 @@ namespace STRenderWebService
             myObject.htmlFooter = Convert.ToBase64String(Encoding.UTF8.GetBytes(htmlfooter));
             myObject.Method = "HtmlToPdf";
             return PostJObject(myObject);
+            
         }
 
         private byte[] PostJObject(dynamic myObject)
@@ -97,7 +98,7 @@ namespace STRenderWebService
             return res;
         }
 
-        private byte[] ProccessResponce(JObject objRes)
+        public byte[] ProccessResponce(JObject objRes)
         {
             if (objRes["Data"]["metaData"]?.ToString() == "error")
             {
